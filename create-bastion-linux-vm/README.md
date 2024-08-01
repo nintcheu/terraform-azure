@@ -1,4 +1,4 @@
-# Use Terraform to create a Linux VM
+# Use Terraform to create a "Bastion" Linux VM 
 
 > https://learn.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-terraform?tabs=azure-cli
 
