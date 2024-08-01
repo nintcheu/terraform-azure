@@ -137,11 +137,89 @@ Based on your Terraform configuration `main.tf` file, here's a UML-like represen
                             | - boot_diagnostics     |
                             +------------------------+
 ```
+Based on your Terraform configuration, I'll create a simplified UML-like diagram representing the relationships between the resources. Here's a textual representation of the diagram:
+
+```
++------------------------+
+|  random_pet: rg_name   |
++------------------------+
+           |
+           | generates name for
+           v
++------------------------+
+| azurerm_resource_group |
++------------------------+
+           |
+           | contains
+           |------------------------+
+           |                        |
+           v                        v
++------------------------+  +------------------------+
+| azurerm_virtual_network|  |  azurerm_public_ip     |
++------------------------+  +------------------------+
+           |
+           | contains
+           v
++------------------------+
+|    azurerm_subnet      |
++------------------------+
+           |
+           | associated with
+           v
++------------------------+
+|azurerm_network_interface|
++------------------------+
+           |
+           | associated with
+           |
+    +------+------+
+    |             |
+    v             v
++------------------------+  +------------------------+
+|azurerm_network_security|  |azurerm_linux_virtual   |
+|_group                  |  |_machine                |
++------------------------+  +------------------------+
+    |                               |
+    | associated with               | uses
+    |                               |
+    v                               v
++------------------------+  +------------------------+
+|azurerm_network_interface|  |azurerm_storage_account|
+|_security_group_assoc    |  +------------------------+
++------------------------+          ^
+                                    |
+                                    | uses
+                                    |
+                         +------------------------+
+                         |      random_id         |
+                         +------------------------+
+```
+
+
+This diagram shows:
+
+- The random_pet resource generates a name for the azurerm_resource_group.
+- The azurerm_resource_group contains the azurerm_virtual_network and azurerm_public_ip.
+- The azurerm_virtual_network contains the azurerm_subnet.
+- The azurerm_subnet is associated with the azurerm_network_interface.
+- The azurerm_network_interface is associated with both the azurerm_network_security_group and the azurerm_linux_virtual_machine.
+- The azurerm_network_security_group is associated with the azurerm_network_interface through the azurerm_network_interface_security_group_association.
+- The azurerm_linux_virtual_machine uses the azurerm_storage_account.
+- The random_id resource is used to generate a unique name for the azurerm_storage_account.
+
+This diagram provides a visual representation of how your resources are related in your Terraform configuration, showing the dependencies and associations between different Azure resources.
 
 ## initialize configuration
 
 ```
 terraform init -upgrade
+```
+
+
+## format my files *.tf
+
+```
+terraform fmt
 ```
 
 ## Create execution plan
@@ -158,9 +236,18 @@ terraform apply main.tfplan
 
 ### outputs
 ```
-key_data = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClCJYbF9qOzfDODIKewuHdQJ66gQQNq0shAAruRBYxz6LqYFAT6BW3fl7pvFcjMjB59ZFd25JXDFUeta6mw3P+b1TZlmDhqgt4hKAx+7GwnEM1qc79aDyX6X9x8IQtGLUYXFP7LUz/0NdRW99y9YyO+ESLw0t0LVcI/D7/ILjwQW71Ez2O/fdy+BEi9KWsQC1Br6sZLDk2b1nBBPjr1bbhsrQA/vZmvoHxN8F+7WjMOq1KI8RX/gD5tPSvCUi9zicpscgQYUhROibL79zptr66YuX9Lrwwy+HyqTTFYfXpmFVpFR0Gs5qXDUWKNqQetY1hz6qgC24wvhDVQ7gTKt+WmIjqUDPuuHZCnAr3dBtkrjPVdFlQLM8wSfNUzRlBJ5RZh4VgsY73Y2wHh6H1qgwhC6VZQqWDnXtvbi6IdfAIkOGqDjs9gsyYG1Or6JrsYBuJHo5+uWaR4QSD5+UZpAboH39yoY/VriNSv8lZPpa/JEJLqhdBwCiPW54DenxokSk= generated-by-azure"
-public_ip_address = "40.87.51.13"
-resource_group_name = "rg-exact-bengal"
+vm_login_instructions = <<EOT
+To log into your VM, follow these steps:
+
+1. Ensure your private key has the correct permissions:
+   chmod 600 ~/.ssh/id_rsa
+
+2. Use the following command to SSH into your VM:
+   ssh -i ~/.ssh/id_rsa azureadmin@
+
+Note: Replace ~/.ssh/id_rsa with the actual path to your private key if different.
+
+EOT
 ```
 
 ## Verify result
