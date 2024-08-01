@@ -64,3 +64,22 @@ variable "label_nic" {
   description = "Label to name nic - network interface configuration"
   default     = "my_nic_configuration"
 }
+
+variable "https_port_to_expose"{
+  type        = string
+  description = "HTTPS port to expose"
+  default     = "443"
+}
+
+variable "http_port_to_expose"{
+
+  type        = string
+  description = "HTTPS port to expose"
+  default     = "80"
+}
+
+variable "ssh_port_to_expose"{
+  type        = string
+  description = "HTTPS port to expose"
+  default     = "22"
+}
